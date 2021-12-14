@@ -1,13 +1,15 @@
-const Sauces = require('../models/sauces');
+const Sauce = require('../models/Sauce');
 
-exports.createThing = (req, res, next) => {
-  const thingObject = Json.parse(req.body.thing);
-  delete thingObject._id;
-  const thing = new Sauces({
-    ...thingObject,
+exports.createSauce = (req, res, next) => {
+  const sauceObject = JSON.parse(req.body.sauce);
+  delete sauceObject._id;
+  console.log(sauceObject);
+  const sauce = new Sauce({
+    ...sauceObject,
+    userId: req.userId,
     imageUrl: `${req.protocol}://${req.get('host')}/images/$req.file.filename`
   });
-  thing.save().then(
+  sauce.save().then(
     () => {
       res.status(201).json({
         message: 'Post saved successfully!'
@@ -23,7 +25,7 @@ exports.createThing = (req, res, next) => {
 };
 
 exports.getOneSauce = (req, res, next) => {
-  Thing.findOne({
+  Sauce.findOne({
     _id: req.params.id
   }).then(
     (sauce) => {
@@ -38,8 +40,8 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
-exports.modifyThing = (req, res, next) => {
-  const thing = new Thing({
+exports.modifySauce = (req, res, next) => {
+  const sauce = new Sauce({
     _id: req.params.id,
     title: req.body.title,
     description: req.body.description,
@@ -47,10 +49,11 @@ exports.modifyThing = (req, res, next) => {
     price: req.body.price,
     userId: req.body.userId
   });
-  Thing.updateOne({_id: req.params.id}, thing).then(
+  console.log(sauce._id);
+  Sauce.updateOne({_id: req.params.id}, sauce).then(
     () => {
       res.status(201).json({
-        message: 'Thing updated successfully!'
+        message: 'Sauce updated successfully!'
       });
     }
   ).catch(
@@ -62,8 +65,22 @@ exports.modifyThing = (req, res, next) => {
   );
 };
 
-exports.deleteThing = (req, res, next) => {
-  Thing.deleteOne({_id: req.params.id}).then(
+exports.deleteSauce = (req, res, next) => {
+  Sauce.findOne({_id: req.params.id}).then(
+    (sauce) => {
+      if (!sauce) {
+        return res.status(404).json ({
+          error: new Error('Sauce introuvable...')
+        });
+      }
+      if (sauce.userId !== req.userId) {
+        return res.status(403).json ({
+          error: new Error('Requête non autorisé...')
+        });
+      }
+    }
+  )
+  Sauce.deleteOne({_id: req.params.id}).then(
     () => {
       res.status(200).json({
         message: 'Deleted!'
@@ -79,7 +96,7 @@ exports.deleteThing = (req, res, next) => {
 };
 
 exports.getAllSauces = (req, res, next) => {
-  Sauces.find().then(
+  Sauce.find().then(
     (sauces) => {
       res.status(200).json(sauces);
     }
