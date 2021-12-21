@@ -6,6 +6,6 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true }
 });
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator, { message: 'This {PATH} is already use.' });
 
 module.exports = mongoose.model('User', userSchema);
