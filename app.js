@@ -12,7 +12,7 @@ app.use((req, res, next) => {
 const mongoose = require('mongoose');
 mongoose
   // .connect('mongodb://localhost:27017/piiquante')
-  .connect('mongodb+srv://kanou:38uejd21cRG89Kfx@cluster0.khqpu.mongodb.net/Piiquante?retryWrites=true&w=majority')
+  .connect('mongodb+srv://kanou:rv7ThZfJylCbxt6v@cluster0.khqpu.mongodb.net/Piiquante?retryWrites=true&w=majority')
   .then(() => console.log('Connection à MongoDB réussie !'))
   .catch(() => console.log('Connection à MongoDB échouée !'))
 

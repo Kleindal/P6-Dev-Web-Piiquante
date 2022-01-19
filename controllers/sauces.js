@@ -142,7 +142,7 @@ exports.likeSauce = async (req, res, next) => {
         }
         break;
       case -1:
-        sauce.dislikes = sauce.dislikes + likeValue;
+        sauce.dislikes = sauce.dislikes + 1;
         if (sauce.usersDisliked.indexOf(userId) !== -1) {
           throw new Error('You already disliked this sauce');
         }
